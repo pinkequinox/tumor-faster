@@ -171,12 +171,12 @@ class RPN(nn.Module):
 
 
 class FasterRCNN(nn.Module):
-#    n_classes = 2
-    n_classes = 3
-#    classes = np.asarray(['__background__',
-#                       'tumor'])
+    n_classes = 2
+#    n_classes = 3
     classes = np.asarray(['__background__',
-                       '0', '1'])
+                       'tumor'])
+#    classes = np.asarray(['__background__',
+ #                      '0', '1'])
     PIXEL_MEANS = np.array([[[102.9801, 115.9465, 122.7717]]])
     SCALES = (600,)
     MAX_SIZE = 1000
