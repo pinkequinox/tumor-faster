@@ -12,22 +12,23 @@ from faster_rcnn.fast_rcnn.nms_wrapper import nms
 from faster_rcnn.fast_rcnn.bbox_transform import bbox_transform_inv, clip_boxes
 from faster_rcnn.datasets.factory import get_imdb
 from faster_rcnn.fast_rcnn.config import cfg, cfg_from_file, get_output_dir
+from faster_rcnn.datasets.voc_eval import parse_rec
 
 
 # hyper-parameters
 # ------------
 imdb_name = 'voc_2007_test'
-cfg_file = 'experiments/cfgs/faster_rcnn_end2end.ymlbak'
+cfg_file = 'experiments/cfgs/faster_rcnn_end2end.yml'
 # trained_model = '/media/longc/Data/models/VGGnet_fast_rcnn_iter_70000.h5'
-trained_model = '/media/box/pytorch_train_record/170901/saved_model3/faster_rcnn_100000.h5'
+trained_model = '/home/xsn/py3_faster_rcnn_pytorch/models/saved_model3/faster_rcnn_100000.h5'
 
 rand_seed = 1024
 
 save_name = 'faster_rcnn_100000'
-max_per_image = 300
+max_per_image = 1000
 thresh = 0.05
-vis = False
-
+vis = True
+vis_gt = True
 # ------------
 
 if rand_seed is not None:
@@ -48,7 +49,7 @@ def vis_detections(im, class_name, dets, thresh=0.8):
         if score > thresh:
             cv2.rectangle(im, bbox[0:2], bbox[2:4], (0, 204, 0), 2)
             cv2.putText(im, '%s: %.3f' % (class_name, score), (bbox[0], bbox[1] + 15), cv2.FONT_HERSHEY_PLAIN,
-                        1.0, (0, 0, 255), thickness=1)
+                        1.0, (0, 204, 0), thickness=1)
     return im
 
 
@@ -135,9 +136,17 @@ def test_net(name, net, imdb, max_per_image=300, thresh=0.05, vis=False):
         print('im_detect: {:d}/{:d} {:.3f}s {:.3f}s' \
             .format(i + 1, num_images, detect_time, nms_time))
 
+        if vis_gt and vis:
+            annopath_1 = os.path.join(imdb._devkit_path, 'VOC' + imdb._year,
+            'Annotations', '{:s}.xml')
+            recs_1 = parse_rec(annopath_1.format(imdb._image_index[i]))
+            bbox_2 = np.array([x['bbox'] for x in recs_1])
+            for d in range(len(recs_1)):
+                bbox_1 = tuple(x_1 for x_1 in bbox_2[d, :4])
+                cv2.rectangle(im2show, bbox_1[0:2], bbox_1[2:4], (0, 0, 255), 1)
         if vis:
             cv2.imshow('test', im2show)
-            cv2.waitKey(1)
+            cv2.waitKey(0)
 
     with open(det_file, 'wb') as f:
         pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
