@@ -4,7 +4,9 @@ import numpy as np
 from datetime import datetime
 
 from faster_rcnn import network
-from faster_rcnn.faster_rcnn import FasterRCNN, RPN
+# from faster_rcnn.faster_rcnn import FasterRCNN, RPN
+# import faster_rcnn.network_vggm3 as network
+from faster_rcnn.faster_rcnn_vggm4 import FasterRCNN, RPN
 from faster_rcnn.utils.timer import Timer
 
 import faster_rcnn.roi_data_layer.roidb as rdl_roidb
@@ -97,7 +99,7 @@ if use_tensorboard:
     if remove_all_log:
         cc.remove_all_experiments()
     if exp_name is None:
-        exp_name = datetime.now().strftime('vgg16_%m-%d_%H-%M')
+        exp_name = datetime.now().strftime('vgg16_modi4%m-%d_%H-%M')
         exp = cc.create_experiment(exp_name)
     else:
         exp = cc.open_experiment(exp_name)

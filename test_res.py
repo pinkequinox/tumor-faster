@@ -4,10 +4,8 @@ import cv2
 import pickle
 import numpy as np
 
-# from faster_rcnn import network
-# from faster_rcnn.faster_rcnn import FasterRCNN, RPN
-import faster_rcnn.network_vggm3 as network
-from faster_rcnn.faster_rcnn_vggm3 import FasterRCNN, RPN
+from faster_rcnn import network
+from faster_rcnn.faster_rcnn_res import FasterRCNN, RPN
 from faster_rcnn.utils.timer import Timer
 from faster_rcnn.fast_rcnn.nms_wrapper import nms
 
@@ -27,11 +25,12 @@ trained_model = '/home/xsn/py3_faster_rcnn_pytorch/models/saved_model3/faster_rc
 rand_seed = 1024
 
 save_name = 'faster_rcnn_100000'
-max_per_image = 0
+max_per_image = 1000
 thresh = 0.02
 vis = True
 vis_gt = True
 vis_proposals = False
+
 # ------------
 
 if rand_seed is not None:
@@ -106,11 +105,12 @@ def test_net(name, net, imdb, max_per_image=300, thresh=0.05, vis=False, vis_gt=
         _t['im_detect'].tic()
         scores, boxes = im_detect(net, im)
         detect_time = _t['im_detect'].toc(average=False)
-                
+
+        
         if vis:
             # im2show = np.copy(im[:, :, (2, 1, 0)])
             im2show = np.copy(im)
-        
+
         if vis and vis_proposals:
             for j in range(scores.shape[0]):
                 bbox_1 = tuple(x_1 for x_1 in boxes[j, :4])
