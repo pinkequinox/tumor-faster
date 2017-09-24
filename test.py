@@ -4,10 +4,10 @@ import cv2
 import pickle
 import numpy as np
 
-# from faster_rcnn import network
+from faster_rcnn import network
 # from faster_rcnn.faster_rcnn import FasterRCNN, RPN
-import faster_rcnn.network_vggm3 as network
-from faster_rcnn.faster_rcnn_vggm3 import FasterRCNN, RPN
+# import faster_rcnn.network_vggm3 as network
+from faster_rcnn.faster_rcnn_vggm4 import FasterRCNN, RPN
 from faster_rcnn.utils.timer import Timer
 from faster_rcnn.fast_rcnn.nms_wrapper import nms
 
